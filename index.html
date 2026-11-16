@@ -39,6 +39,7 @@ a.addr:hover, a.addr:focus-visible { text-decoration: underline; }
   --line2: #35455C;
   --text: #F4F6FA;
   --muted: #9BA7B8;
+  --dim: #66727F;
   --court: #1A4DB3;
   --sky: #5CABFF;
   --ball: #DAF24A;
@@ -149,6 +150,16 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 7
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .card { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .card p { color: var(--muted); }
+.points { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.points li { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.band > .in.split > .cards { grid-column: 1 / -1; }
+.steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+.steps li {
+  counter-increment: step; background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 20px;
+  display: flex; flex-direction: column; gap: 28px; font-size: 19px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+}
+.steps li::before { content: counter(step); color: var(--ball); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.closing { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; letter-spacing: -0.02em; }
 .band > .in.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
 .panel { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .group { display: flex; flex-direction: column; gap: 10px; }
@@ -192,7 +203,10 @@ input[type="text"] {
   .stage { flex: none; margin: 0; width: min(100%, calc(66vh * var(--ar, 0.5625))); aspect-ratio: var(--ar, 0.5625); border-radius: 20px; }
   .hintrow { padding: 12px 2px 0; align-self: stretch; }
   .band > .in { padding-block: 48px; gap: 24px; }
-  .cards, .band > .in.split { grid-template-columns: minmax(0, 1fr); }
+  .cards, .band > .in.split, .steps { grid-template-columns: minmax(0, 1fr); }
+  .steps { gap: 10px; }
+  .steps li { flex-direction: row; align-items: baseline; gap: 16px; padding: 16px 20px; }
+  .steps li::before { flex: 0 0 auto; }
   .band > .in.split { gap: 24px; }
   .brand img { height: 34px; }
 }
@@ -244,11 +258,16 @@ input[type="text"] {
   </section>
 
   <section class="band alt">
-    <div class="in">
+    <div class="in split">
       <div class="sechead">
-        <h2>Built into the apps fans already use</h2>
+        <h2>Inside the app your fans already use</h2>
         <p class="lede">SloMo is an SDK. Rights holders and broadcasters add it to their own apps and video players, so the control sits on the footage they already show.</p>
       </div>
+      <ul class="points">
+        <li>Fans stay inside your app</li>
+        <li>Your colours, your player, your sponsors</li>
+        <li>Nothing new for fans to download</li>
+      </ul>
       <div class="cards">
         <div class="card"><h3>Highlights</h3><p>Every clip in the app becomes one fans can slow, freeze and run back themselves.</p></div>
         <div class="card"><h3>Archive</h3><p>Classic footage gets a new reason to be watched again.</p></div>
@@ -268,6 +287,38 @@ input[type="text"] {
         <input type="text" id="sponsorName" value="BRAND" maxlength="24" aria-label="Sponsor name">
         <div class="row"><button type="button" class="primary" data-toclip>Go to the clip</button></div>
       </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="in">
+      <div class="sechead">
+        <h2>From your footage to your fans in five steps</h2>
+        <p class="lede">Who does what, from the moment a clip leaves your production team.</p>
+      </div>
+      <ol class="steps">
+        <li>You send clips.</li>
+        <li>SloMo checks them.</li>
+        <li>SloMo prepares them.</li>
+        <li>Fans hold to slow.</li>
+        <li>You see results.</li>
+      </ol>
+      <p class="closing">We integrate. We manage. You monetise.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="in split">
+      <div class="sechead">
+        <h2>Your footage at full frame rate, and our SDK in your app</h2>
+        <p class="lede">What we need from your production team.</p>
+      </div>
+      <ul class="points">
+        <li>120 or 240 frames per second is best</li>
+        <li>Real time, not already slowed down</li>
+        <li>One file per camera</li>
+        <li>MP4 or MOV, 1080p or higher, with sound</li>
+      </ul>
     </div>
   </section>
 

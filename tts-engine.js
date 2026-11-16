@@ -1,4 +1,4 @@
-/* Touch To Slow engine, shared by the home page and the engine test page (lab.html). */
+/* Touch To Slow engine, used by the home page. */
 /* Reads the index of an MP4 or MOV file: where each video frame sits in the file, when it is shown, and which frames stand alone. */
 function parseMp4(buf) {
   var dv = new DataView(buf), len = buf.byteLength;
