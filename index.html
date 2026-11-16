@@ -396,7 +396,7 @@ input[type="text"] {
   function rewind(sec) {
     if (!v.duration) return;
     var t = v.currentTime - sec;
-    v.currentTime = t < 0 ? Math.max(0, v.duration + t) : t;
+    v.currentTime = t < 0 ? Math.max(0, v.duration - END + t) : t;
     s.mt = v.currentTime;
     flash.textContent = 'Back ' + sec + ' seconds';
     flash.classList.add('on');
@@ -474,8 +474,15 @@ input[type="text"] {
   });
   v.addEventListener('error', function () { fail.hidden = false; });
 
+  // Phones can lock up if a paused clip is sent to its very last instant, so rewinding wraps to just short of it.
+  var END = 0.12;
+  v.addEventListener('ended', function () {
+    try { v.currentTime = 0; } catch (e) {}
+    if (!s.paused && !s.manual) v.play().catch(function () {});
+  });
+
   var last = performance.now();
-  var lastSet = 0;
+  var lastSet = 0, playTry = 0, seekAt = 0, seenT = -1, seenAt = 0;
   function frame(now) {
     var dt = Math.min(0.1, (now - last) / 1000); last = now;
     // Three modes. Slow motion is the device's own player at a fixed step (one rate change at a time,
@@ -496,21 +503,35 @@ input[type="text"] {
     var dur = v.duration;
     if (dur && isFinite(dur) && !s.paused) {
       if (eff > 0) {
-        s.manual = false;
+        if (s.manual) { s.manual = false; playTry = 0; seenAt = now; }
         // The player is told in steps of about 7 percent, at most one every 60 ms, and once more exactly on arrival.
         var cur = v.playbackRate || 1;
         if ((eff === goal && cur !== eff) || (Math.abs(Math.log(eff / cur)) > 0.07 && now - lastSet > 60)) {
           try { v.playbackRate = eff; } catch (e) {}
           lastSet = now;
         }
-        if (v.paused) v.play().catch(function () {});
+        // Ask to play once, then again only every so often: asking on every frame can jam a phone's player.
+        if (v.paused) {
+          seenAt = now;
+          if (now - playTry > 400) { playTry = now; v.play().catch(function () {}); }
+        } else if (v.currentTime !== seenT) { seenT = v.currentTime; seenAt = now; }
+        else if (now - seenAt > 1200) {
+          // Playing but the picture has not moved for over a second: nudge the player and start it again.
+          seenAt = now; playTry = 0;
+          try { v.pause(); v.currentTime = v.currentTime >= dur - 2 * END ? 0 : v.currentTime + 0.05; } catch (e) {}
+        }
       } else {
         if (!s.manual) { s.manual = true; s.mt = v.currentTime; }
         if (!v.paused) v.pause();
         if (eff < 0) {
           s.mt += eff * dt;
-          if (s.mt < 0) s.mt += dur;
-          if (!v.seeking && Math.abs(v.currentTime - s.mt) > 0.02) v.currentTime = s.mt;
+          if (s.mt < 0) s.mt = Math.max(0, s.mt + dur - END);
+          if (s.mt > dur - END) s.mt = dur - END;
+          // One jump at a time, at most 20 a second. A jump the phone never finishes is given up on after half a second.
+          if (now - seekAt > 50 && (!v.seeking || now - seekAt > 500) && Math.abs(v.currentTime - s.mt) > 0.02) {
+            seekAt = now;
+            try { v.currentTime = s.mt; } catch (e) {}
+          }
         }
       }
     }
