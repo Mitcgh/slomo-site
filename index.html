@@ -107,8 +107,8 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 7
 .homebar { align-self: center; width: 120px; height: 5px; border-radius: 3px; background: var(--text); opacity: 0.85; margin: 2px 0 10px; }
 .hud {
   position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; align-items: baseline;
-  padding: 8px 14px; border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
-  font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none;
+  height: 42px; box-sizing: border-box; padding: 8px 14px; border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
+  font-size: 16px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none;
 }
 .hud .state { color: var(--muted); font-weight: 500; font-size: 14px; }
 .stage.slow .hud { border-color: var(--ball); }
@@ -120,16 +120,22 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 7
 .ring::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--ball); }
 .stage.holding .ring { opacity: 1; transform: scale(1); }
 .sponsor {
-  position: absolute; right: 14px; top: 14px; max-width: calc(100% - 28px); box-sizing: border-box; padding: 8px 12px;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right;
-  border-radius: 14px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
+  position: absolute; right: 14px; top: 14px; height: 42px; box-sizing: border-box; padding: 0 12px 0 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
   opacity: 0; transition: opacity 0.35s; pointer-events: none;
 }
 .stage.holding.withsponsor .sponsor { opacity: 1; }
-.sponsor .by { letter-spacing: 0.12em; text-transform: uppercase; font-size: 10px; font-weight: 600; color: #C9D2DE; white-space: nowrap; }
-.sponsor .brandname { font-size: 15px; font-weight: 700; letter-spacing: 0.18em; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* On a narrow clip the sponsor would run into the speed readout, so it sits just under it, still on the right. */
-@container (max-width: 359px) { .sponsor { top: 64px; } }
+.sponsor .by { letter-spacing: 0.1em; text-transform: uppercase; font-size: 9px; line-height: 1.25; font-weight: 600; color: #C9D2DE; text-align: right; white-space: nowrap; }
+.sponsor img { display: block; height: 26px; width: auto; }
+/* On a narrow clip the speed readout drops its word so the two pills still fit on one line. */
+@container (max-width: 299px) {
+  .hud { left: 10px; padding: 8px 12px; }
+  .hud .state { display: none; }
+  .sponsor { right: 10px; padding: 0 10px; gap: 6px; }
+  .sponsor .by { font-size: 8px; letter-spacing: 0.06em; }
+  .sponsor img { height: 22px; }
+}
 .bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--ball); pointer-events: none; }
 .flash {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -237,7 +243,7 @@ input[type="text"] {
           <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch and hold to slow it down, or hold the space bar.">
             <video id="v" poster="poster.jpg" playsinline muted loop autoplay preload="auto" disablepictureinpicture></video>
             <canvas id="cv"></canvas>
-            <div class="sponsor" aria-hidden="true"><span class="by">Replay sponsored by</span><span class="brandname" id="brandOut">BRAND</span></div>
+            <div class="sponsor" aria-hidden="true"><span class="by">Replay<br>sponsored by</span><img src="logo.svg" alt="" width="360" height="350"></div>
             <div class="bar" id="bar"></div>
             <div class="ring" id="ring"></div>
             <div class="hud" aria-live="off"><span class="rate" id="rate">1.00×</span><span class="state" id="state">Full speed</span></div>
@@ -280,11 +286,10 @@ input[type="text"] {
     <div class="in split">
       <div class="sechead">
         <h2>A sponsor on every replay</h2>
-        <p class="lede">While a fan holds the clip, the replay can carry a brand. Type a name here, then hold the clip to see it.</p>
+        <p class="lede">While a fan holds the clip, the replay can carry a brand. Hold the clip to see it.</p>
       </div>
       <div class="panel">
         <label class="check" for="sponsorOn"><input type="checkbox" id="sponsorOn" checked> Show a sponsor while slowed</label>
-        <input type="text" id="sponsorName" value="BRAND" maxlength="24" aria-label="Sponsor name">
         <div class="row"><button type="button" class="primary" data-toclip>Go to the clip</button></div>
       </div>
     </div>
@@ -377,9 +382,7 @@ input[type="text"] {
   var bar = document.getElementById('bar');
   var flash = document.getElementById('flash');
   var fail = document.getElementById('fail');
-  var brandOut = document.getElementById('brandOut');
   var sponsorOn = document.getElementById('sponsorOn');
-  var sponsorName = document.getElementById('sponsorName');
   var playBtn = document.getElementById('playBtn');
   var soundBtn = document.getElementById('soundBtn');
   var fsBtn = document.getElementById('fsBtn');
@@ -442,20 +445,16 @@ input[type="text"] {
   }
   function setSponsor() {
     stage.classList.toggle('withsponsor', sponsorOn.checked);
-    brandOut.textContent = (sponsorName.value || 'BRAND').toUpperCase();
     save('sponsorOn', sponsorOn.checked ? '1' : '0');
-    save('sponsorName', sponsorName.value);
   }
 
   var savedHold = Number(load('hold'));
   if (savedHold === 0.5 || savedHold === 0.25 || savedHold === 0.125) setHold(savedHold);
   var so = load('sponsorOn'); if (so !== null) sponsorOn.checked = so === '1';
-  var sn = load('sponsorName'); if (sn !== null) sponsorName.value = sn;
   setSponsor();
 
   rateButtons.forEach(function (b) { b.addEventListener('click', function () { setHold(Number(b.dataset.rate)); }); });
   sponsorOn.addEventListener('change', setSponsor);
-  sponsorName.addEventListener('input', setSponsor);
 
   function targetFromDrag() {
     var w = stage.clientWidth || 1;
