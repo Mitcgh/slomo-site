@@ -93,7 +93,11 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 7
   touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer;
 }
 .stage:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
-.stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.stage video, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+/* The canvas is where the page paints frames it has decoded itself. It takes over from the video once its first frame is up. */
+.stage canvas { display: none; }
+.stage.engine canvas { display: block; }
+.stage.engine video { opacity: 0; }
 .hintrow { display: flex; align-items: center; gap: 12px; padding: 12px 18px 10px; font-size: 14px; font-weight: 500; color: var(--muted); }
 .hintrow .meter { flex: 1; min-width: 24px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
 .hintrow .meter i { display: block; height: 100%; width: 100%; background: var(--ball); }
@@ -218,6 +222,7 @@ input[type="text"] {
           <div class="appbar"><span class="t">Interactive replays</span><span class="by">by SloMo</span></div>
           <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch and hold to slow it down, or hold the space bar.">
             <video id="v" poster="poster.jpg" playsinline muted loop autoplay preload="auto" disablepictureinpicture></video>
+            <canvas id="cv"></canvas>
             <div class="sponsor" aria-hidden="true"><span class="by">Replay sponsored by</span><span class="brandname" id="brandOut">BRAND</span></div>
             <div class="bar" id="bar"></div>
             <div class="ring" id="ring"></div>
@@ -309,9 +314,11 @@ input[type="text"] {
 
 <footer class="foot"><div class="in">© 2026 SloMo Technology Ltd · <a class="addr" href="privacy.html">App privacy</a> · <a class="addr" href="support.html">App support</a></div></footer>
 
+<script src="tts-engine.js"></script>
 <script>
 (function () {
   var v = document.getElementById('v');
+  var canvas = document.getElementById('cv');
   var stage = document.getElementById('stage');
   var ring = document.getElementById('ring');
   var rateEl = document.getElementById('rate');
@@ -333,6 +340,46 @@ input[type="text"] {
 
   var s = { holding: false, hold: 0.25, speed: 1, target: 1, manual: false, mt: 0, paused: false, sound: false, force: false,
             id: null, x0: 0, y0: 0, t0: 0, dx: 0, dy: 0, key: false, objectUrl: null };
+
+  // Two ways to show the clip. The engine decodes frames itself and paints them, so touch answers on the next screen refresh.
+  // Where a browser cannot do that, or the engine fails, the browser's own video player takes over, as before.
+  var eng = null, srcUrl = 'swing.mp4', loadId = 0, audioReady = false, audioTry = 0, noPaint = 0;
+  var canEngine = 'VideoDecoder' in window && 'EncodedVideoChunk' in window && typeof createEngine === 'function';
+
+  function useVideo(at) {
+    if (eng) { try { eng.destroy(); } catch (e) {} eng = null; }
+    stage.classList.remove('engine');
+    s.manual = false;
+    v.muted = true; v.src = srcUrl; v.load(); audioReady = true;
+    if (at > 0) v.addEventListener('loadedmetadata', function h() { v.removeEventListener('loadedmetadata', h); try { v.currentTime = at; } catch (e) {} });
+    if (!s.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  }
+  function engineFailed() { if (eng) useVideo(eng.time()); }
+  function tryEngine(buf) {
+    var info;
+    try { info = parseMp4(buf); } catch (e) { return Promise.resolve(false); }
+    return VideoDecoder.isConfigSupported({ codec: info.codec, codedWidth: info.width, codedHeight: info.height, description: info.description }).then(function (r) {
+      if (!r.supported) return false;
+      try { eng = createEngine(buf, info, canvas, engineFailed); } catch (e) { eng = null; return false; }
+      stage.style.setProperty('--ar', String(eng.width / eng.height));
+      fail.hidden = true; noPaint = 0;
+      return true;
+    }, function () { return false; });
+  }
+  function loadSource(url, size, getBuf) {
+    var id = ++loadId;
+    srcUrl = url; audioReady = false;
+    s.sound = false; soundBtn.setAttribute('aria-pressed', 'false'); // sound has to be switched on again by a tap for each clip
+    if (eng) { try { eng.destroy(); } catch (e) {} eng = null; }
+    stage.classList.remove('engine');
+    if (v.getAttribute('src')) { v.pause(); v.removeAttribute('src'); v.load(); }
+    // Very large files go to the browser's player: the engine needs the whole clip in memory.
+    if (!canEngine || size > 300 * 1024 * 1024) { useVideo(0); return; }
+    getBuf().then(function (buf) {
+      if (id !== loadId) return;
+      return tryEngine(buf).then(function (ok) { if (id === loadId && !ok) useVideo(0); });
+    }).catch(function () { if (id === loadId) useVideo(0); });
+  }
 
   function save(k, val) { try { localStorage.setItem('tts-' + k, String(val)); } catch (e) {} }
   function load(k) { try { return localStorage.getItem('tts-' + k); } catch (e) { return null; } }
@@ -394,10 +441,13 @@ input[type="text"] {
     ring.style.top = (y - r.top) + 'px';
   }
   function rewind(sec) {
-    if (!v.duration) return;
-    var t = v.currentTime - sec;
-    v.currentTime = t < 0 ? Math.max(0, v.duration - END + t) : t;
-    s.mt = v.currentTime;
+    if (eng) { var te = eng.time() - sec; eng.seek(te < 0 ? te + eng.dur : te); }
+    else {
+      if (!v.duration) return;
+      var t = v.currentTime - sec;
+      v.currentTime = t < 0 ? Math.max(0, v.duration - END + t) : t;
+      s.mt = v.currentTime;
+    }
     flash.textContent = 'Back ' + sec + ' seconds';
     flash.classList.add('on');
     setTimeout(function () { flash.classList.remove('on'); }, 600);
@@ -420,7 +470,7 @@ input[type="text"] {
     if (e.pointerId !== s.id) return;
     s.id = null;
     endHold(e.type === 'pointerup');
-    if (!s.paused && v.paused) v.play().catch(function () {});
+    if (!eng && !s.paused && v.paused) v.play().catch(function () {});
   }
   stage.addEventListener('pointerup', up);
   stage.addEventListener('pointercancel', up);
@@ -443,11 +493,19 @@ input[type="text"] {
   playBtn.addEventListener('click', function () {
     s.paused = !s.paused;
     playBtn.textContent = s.paused ? 'Play' : 'Pause';
+    if (eng) return;
     if (s.paused) v.pause(); else v.play().catch(function () {});
   });
   soundBtn.addEventListener('click', function () {
     s.sound = !s.sound;
     soundBtn.setAttribute('aria-pressed', String(s.sound));
+    // With the engine, sound comes from the video element playing out of sight. It has to be started from a tap like this one.
+    if (eng && s.sound) {
+      if (!audioReady) { v.src = srcUrl; v.load(); audioReady = true; }
+      try { v.currentTime = eng.time(); } catch (e) {}
+      v.muted = false; v.playbackRate = 1; audioTry = performance.now();
+      v.play().catch(function () {});
+    }
   });
   if (!document.fullscreenEnabled || !stage.requestFullscreen) fsBtn.hidden = true;
   fsBtn.addEventListener('click', function () {
@@ -462,17 +520,15 @@ input[type="text"] {
     s.objectUrl = URL.createObjectURL(f);
     fail.hidden = true;
     v.removeAttribute('poster');
-    v.src = s.objectUrl;
-    v.load();
     s.paused = false; playBtn.textContent = 'Pause';
-    v.play().catch(function () {});
+    loadSource(s.objectUrl, f.size, function () { return f.arrayBuffer(); });
     clipname.textContent = 'Showing: ' + f.name;
   });
   v.addEventListener('loadedmetadata', function () {
-    if (v.videoWidth && v.videoHeight) stage.style.setProperty('--ar', String(v.videoWidth / v.videoHeight));
+    if (!eng && v.videoWidth && v.videoHeight) stage.style.setProperty('--ar', String(v.videoWidth / v.videoHeight));
     s.mt = 0;
   });
-  v.addEventListener('error', function () { fail.hidden = false; });
+  v.addEventListener('error', function () { if (!eng) fail.hidden = false; });
 
   // Phones can lock up if a paused clip is sent to its very last instant, so rewinding wraps to just short of it.
   var END = 0.12;
@@ -495,13 +551,31 @@ input[type="text"] {
     // not the same amount, which is how a change of speed is felt. It settles in about a quarter of a second.
     if (goal > 0) {
       var from = Math.log(s.speed > 0.1 ? s.speed : 0.1), to = Math.log(goal);
-      var ln = from + (to - from) * (1 - Math.exp(-dt / 0.085));
+      // The engine takes a new speed at once, so its ease is only a touch of softness. The browser's player needs the longer one.
+      var ln = from + (to - from) * (1 - Math.exp(-dt / (eng ? 0.02 : 0.085)));
       s.speed = Math.abs(to - ln) < 0.02 ? goal : Math.exp(ln);
     } else s.speed = goal;
     var eff = s.speed;
 
     var dur = v.duration;
-    if (dur && isFinite(dur) && !s.paused) {
+    if (eng) {
+      var spE = s.paused ? 0 : eff;
+      if (eng.tick(spE, dt, now)) { noPaint = 0; stage.classList.add('engine'); }
+      else if (spE !== 0 && (noPaint += dt) > 3) engineFailed(); // nothing painted for 3 seconds: hand over to the browser's player
+    }
+    if (eng) {
+      // Sound only plays at full speed. The video element supplies it, kept in step with the picture.
+      if (audioReady && s.sound && !s.paused && eff > 0.97) {
+        var et = eng.time();
+        if (v.paused) { if (now - audioTry > 500) { audioTry = now; try { v.currentTime = et; } catch (e) {} v.playbackRate = 1; v.play().catch(function () {}); } }
+        else {
+          // Small gaps are closed by playing the sound a shade faster or slower; a big one (the loop point, a rewind) by jumping.
+          var gap = et - v.currentTime;
+          if (Math.abs(gap) > 0.3) { if (!v.seeking && now - audioTry > 1000) { audioTry = now; try { v.currentTime = et; } catch (e) {} } }
+          else { var ar = Math.abs(gap) < 0.06 ? 1 : Math.max(0.9, Math.min(1.1, 1 + gap)); if (v.playbackRate !== ar) v.playbackRate = ar; }
+        }
+      } else if (audioReady && !v.paused) v.pause();
+    } else if (dur && isFinite(dur) && !s.paused) {
       if (eff > 0) {
         if (s.manual) { s.manual = false; playTry = 0; seenAt = now; }
         // The player is told in steps of about 7 percent, at most one every 60 ms, and once more exactly on arrival.
@@ -544,10 +618,16 @@ input[type="text"] {
     meter.style.width = Math.round(100 * Math.min(1, Math.abs(sp))) + '%';
     stateEl.textContent = s.paused ? 'Paused' : sp < -0.02 ? 'Rewind' : sp < 0.02 ? 'Frozen' : sp < 0.98 ? 'Slow' : 'Full speed';
     stage.classList.toggle('slow', !s.paused && sp < 0.98);
-    if (dur && isFinite(dur)) bar.style.width = (100 * (s.manual ? s.mt : v.currentTime) / dur) + '%';
+    if (eng) bar.style.width = (100 * eng.time() / eng.dur) + '%';
+    else if (dur && isFinite(dur)) bar.style.width = (100 * (s.manual ? s.mt : v.currentTime) / dur) + '%';
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  loadSource('swing.mp4', 0, function () {
+    return fetch('swing.mp4').then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); });
+  });
+  window.__tts = { engine: function () { return eng; } };
 })();
 </script>
 <script>
@@ -570,13 +650,5 @@ input[type="text"] {
 })();
 </script>
 
-<script>
-(function () {
-  var v = document.getElementById('v');
-  v.src = 'swing.mp4';
-  v.load();
-  var p = v.play(); if (p && p.catch) p.catch(function () {});
-})();
-</script>
 </body>
 </html>
