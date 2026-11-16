@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SloMo Zone</title>
+<meta name="description" content="Touch To Slow for sports video. Viewers hold the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
+<meta name="theme-color" content="#070B12">
+<link rel="canonical" href="https://slomo.tech/">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SloMo">
+<meta property="og:title" content="SloMo Zone">
+<meta property="og:description" content="Touch To Slow for sports video. Viewers hold the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
+<meta property="og:url" content="https://slomo.tech/">
+<meta property="og:image" content="https://slomo.tech/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="poster.jpg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+html, body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+a.addr { color: inherit; text-decoration: none; }
+a.addr:hover, a.addr:focus-visible { text-decoration: underline; }
+/* Layout: the live clip is the hero. Wide screens: copy on the left, the clip inside a phone on the right.
+   Phones: headline, then the clip at full width, then everything else in one column. One dark look, SloMo's own. */
+:root {
+  --night: #070B12;
+  --deck: #0C121C;
+  --raised: #121A27;
+  --line: #1F2A3B;
+  --line2: #35455C;
+  --text: #F4F6FA;
+  --muted: #9BA7B8;
+  --court: #1A4DB3;
+  --sky: #5CABFF;
+  --ball: #DAF24A;
+  --ink: #070B12;
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  color-scheme: dark;
+}
+body { background: var(--night); color: var(--text); font-family: var(--font); font-size: 17px; line-height: 1.55; }
+.in {
+  max-width: 1120px; margin: 0 auto; box-sizing: border-box;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: clamp(34px, 5.4vw, 64px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; text-wrap: balance; }
+h2 { font-size: clamp(26px, 3.2vw, 38px); line-height: 1.12; letter-spacing: -0.025em; font-weight: 700; text-wrap: balance; }
+h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 700; }
+.lede { color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); max-width: 34em; }
+.muted { color: var(--muted); }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+.brand img { height: 40px; width: auto; display: block; }
+.brand span { color: var(--muted); padding-left: 12px; border-left: 1px solid var(--line2); }
+.toplink { color: var(--text); font-weight: 600; font-size: 15px; text-decoration: none; padding: 9px 16px; border: 1px solid var(--line2); border-radius: 999px; }
+.toplink:hover { border-color: var(--sky); }
+.toplink:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "head phone" "how phone";
+  grid-template-rows: auto 1fr; column-gap: 72px; row-gap: 32px; align-items: start; padding-block: 28px 88px;
+}
+.hero-head { grid-area: head; display: flex; flex-direction: column; gap: 18px; padding-top: 48px; }
+.hero-how { grid-area: how; }
+.stagecol { grid-area: phone; display: flex; justify-content: center; min-width: 0; }
+
+.phone {
+  width: clamp(270px, calc(84vh * 0.4615), 372px); max-width: 100%; aspect-ratio: 9 / 19.5; box-sizing: border-box;
+  border: 10px solid #1A2230; border-radius: 54px; background: #000; box-shadow: 0 0 0 2px #2B3648; overflow: hidden;
+}
+.screen { height: 100%; display: flex; flex-direction: column; background: #05070B; }
+.status { display: flex; justify-content: space-between; align-items: center; padding: 12px 26px 4px; font-weight: 600; font-size: 14px; }
+.status .island { width: 92px; height: 26px; border-radius: 13px; background: #000; border: 1px solid #1A2230; }
+.status .sig { display: flex; gap: 4px; }
+.status .sig i { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--text); }
+.appbar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 18px 10px; }
+.appbar .t { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.appbar .by { color: var(--muted); font-size: 13px; }
+.stage {
+  position: relative; flex: 1; min-height: 0; margin: 0 10px;
+  background: #000; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer;
+}
+.stage:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.hintrow { display: flex; align-items: center; gap: 12px; padding: 12px 18px 10px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.hintrow .meter { flex: 1; min-width: 24px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.hintrow .meter i { display: block; height: 100%; width: 100%; background: var(--ball); }
+.hintrow .r { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.homebar { align-self: center; width: 120px; height: 5px; border-radius: 3px; background: var(--text); opacity: 0.85; margin: 2px 0 10px; }
+.hud {
+  position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; align-items: baseline;
+  padding: 8px 14px; border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
+  font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none;
+}
+.hud .state { color: var(--muted); font-weight: 500; font-size: 14px; }
+.stage.slow .hud { border-color: var(--ball); }
+.stage.slow .hud .rate { color: var(--ball); }
+.ring {
+  position: absolute; left: 0; top: 0; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%;
+  border: 3px solid var(--ball); opacity: 0; transform: scale(0.6); transition: opacity 0.18s, transform 0.18s; pointer-events: none;
+}
+.ring::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--ball); }
+.stage.holding .ring { opacity: 1; transform: scale(1); }
+.sponsor {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 64px 16px 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+  opacity: 0; transition: opacity 0.35s; pointer-events: none;
+}
+.stage.holding.withsponsor .sponsor { opacity: 1; }
+.sponsor .by { letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; font-weight: 600; color: #C9D2DE; }
+.sponsor .brandname {
+  padding: 9px 22px; border-radius: 14px; border: 1px solid #5A6B84; background: rgba(12, 18, 28, 0.92);
+  font-size: 16px; font-weight: 700; letter-spacing: 0.22em; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--ball); pointer-events: none; }
+.flash {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 700; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 0.25s; pointer-events: none;
+}
+.flash.on { opacity: 1; }
+.fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; background: var(--deck); color: var(--muted); }
+
+.how { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); max-width: 34em; }
+.how li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.how b { flex: 0 0 72px; color: var(--ball); font-weight: 600; }
+.how span { color: var(--muted); min-width: 0; }
+
+.band { border-top: 1px solid var(--line); }
+.band.alt { background: var(--deck); }
+.band > .in { padding-block: 72px; display: flex; flex-direction: column; gap: 32px; }
+.sechead { display: flex; flex-direction: column; gap: 12px; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card p { color: var(--muted); }
+.band > .in.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.panel { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.group { display: flex; flex-direction: column; gap: 10px; }
+.group > .label { font-size: 14px; font-weight: 600; color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+button, .filebtn {
+  font: inherit; font-size: 16px; font-weight: 600; color: var(--text); background: var(--deck); border: 1px solid var(--line2);
+  border-radius: 12px; padding: 10px 16px; cursor: pointer;
+}
+button:hover, .filebtn:hover { border-color: var(--sky); }
+button:focus-visible, .filebtn:focus-within, input:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--ball); border-color: var(--ball); color: var(--ink); }
+.filebtn { display: inline-flex; align-items: center; align-self: flex-start; position: relative; }
+.filebtn.primary, button.primary { background: var(--sky); border-color: var(--sky); color: var(--ink); }
+.filebtn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.check { display: flex; align-items: center; gap: 10px; }
+.check input { width: 18px; height: 18px; accent-color: var(--ball); }
+input[type="text"] {
+  font: inherit; color: var(--text); background: var(--deck); border: 1px solid var(--line2); border-radius: 12px;
+  padding: 10px 14px; width: 100%; box-sizing: border-box;
+}
+.note { font-size: 15px; color: var(--muted); }
+.clipname { font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+
+.contact { background: var(--court); border-top: 0; }
+.contact > .in { gap: 20px; }
+.contact .lede { color: #D6E4FF; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.mail .addr { font-size: clamp(22px, 3vw, 32px); font-weight: 700; letter-spacing: -0.02em; user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.mail button { background: var(--text); border-color: var(--text); color: var(--ink); }
+.foot { color: var(--muted); font-size: 14px; }
+.foot > .in { padding-block: 24px 32px; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "phone" "how"; grid-template-rows: none; row-gap: 20px; padding-block: 8px 48px; }
+  .hero-head { padding-top: 8px; gap: 10px; }
+  /* On a real phone the device is the frame, so the mock bezel, status bar, app bar and home bar go. */
+  .phone { width: 100%; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none; background: transparent; overflow: visible; }
+  .screen { height: auto; background: transparent; align-items: center; }
+  .status, .homebar, .appbar { display: none; }
+  .stage { flex: none; margin: 0; width: min(100%, calc(66vh * var(--ar, 0.5625))); aspect-ratio: var(--ar, 0.5625); border-radius: 20px; }
+  .hintrow { padding: 12px 2px 0; align-self: stretch; }
+  .band > .in { padding-block: 48px; gap: 24px; }
+  .cards, .band > .in.split { grid-template-columns: minmax(0, 1fr); }
+  .band > .in.split { gap: 24px; }
+  .brand img { height: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring, .sponsor, .flash { transition: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<header class="in top">
+  <div class="brand"><img src="logo.png" alt="SloMo" width="343" height="330"><span>Zone</span></div>
+  <a class="toplink" href="#contact">Get in touch</a>
+</header>
+
+<main>
+  <section class="in hero">
+    <div class="hero-head">
+      <h1>Touch the video to slow it down</h1>
+      <p class="lede">Press and hold the clip. Let go and it is back to full speed. That is Touch To Slow, and it works on any sports video.</p>
+    </div>
+
+    <div class="stagecol">
+      <div class="phone">
+        <div class="screen">
+          <div class="status" aria-hidden="true"><span>9:41</span><span class="island"></span><span class="sig"><i></i><i></i><i></i></span></div>
+          <div class="appbar"><span class="t">Interactive replays</span><span class="by">by SloMo</span></div>
+          <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch and hold to slow it down, or hold the space bar.">
+            <video id="v" poster="poster.jpg" playsinline muted loop autoplay preload="auto" disablepictureinpicture></video>
+            <div class="sponsor" aria-hidden="true"><span class="by">Replay sponsored by</span><span class="brandname" id="brandOut">BRAND</span></div>
+            <div class="bar" id="bar"></div>
+            <div class="ring" id="ring"></div>
+            <div class="hud" aria-live="off"><span class="rate" id="rate">1.00×</span><span class="state" id="state">Full speed</span></div>
+            <div class="flash" id="flash">Back 3 seconds</div>
+            <div class="fail" id="fail" hidden>This file could not be played here. Try an MP4 or MOV clip.</div>
+          </div>
+          <div class="hintrow"><span>Hold to slow</span><span class="meter"><i id="meter"></i></span><span class="r" id="rate2">1.00×</span></div>
+          <div class="homebar" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="how hero-how">
+      <li><b>Hold</b><span>Touch and hold anywhere on the video to slow it. Let go to return to full speed.</span></li>
+      <li><b>Drag</b><span>While holding, drag right to speed up, or left to slow, freeze and run it backwards.</span></li>
+      <li><b>Swipe</b><span>A quick swipe left jumps back 3 seconds.</span></li>
+    </ul>
+  </section>
+
+  <section class="band alt">
+    <div class="in">
+      <div class="sechead">
+        <h2>Built into the apps fans already use</h2>
+        <p class="lede">SloMo is an SDK. Rights holders and broadcasters add it to their own apps and video players, so the control sits on the footage they already show.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><h3>Highlights</h3><p>Every clip in the app becomes one fans can slow, freeze and run back themselves.</p></div>
+        <div class="card"><h3>Archive</h3><p>Classic footage gets a new reason to be watched again.</p></div>
+        <div class="card"><h3>Live</h3><p>Interactive replays alongside live coverage.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="in split">
+      <div class="sechead">
+        <h2>A sponsor on every replay</h2>
+        <p class="lede">While a fan holds the clip, the replay can carry a brand. Type a name here, then hold the clip to see it.</p>
+      </div>
+      <div class="panel">
+        <label class="check" for="sponsorOn"><input type="checkbox" id="sponsorOn" checked> Show a sponsor while slowed</label>
+        <input type="text" id="sponsorName" value="BRAND" maxlength="24" aria-label="Sponsor name">
+        <div class="row"><button type="button" class="primary" data-toclip>Go to the clip</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt">
+    <div class="in split">
+      <div class="sechead">
+        <h2>Try it on your own footage</h2>
+        <p class="lede">Load a clip from your phone or computer and control it the same way. It stays on your device and is not uploaded.</p>
+        <p class="note">Footage filmed at 120 or 240 frames per second looks smoothest when slowed.</p>
+      </div>
+      <div class="panel">
+        <div class="group">
+          <label class="filebtn primary" for="file">Load your own clip<input type="file" id="file" accept="video/*"></label>
+          <p class="clipname" id="clipname">Showing: golf swing at normal speed. It only slows while you hold.</p>
+        </div>
+        <div class="group">
+          <span class="label">Speed while holding</span>
+          <div class="row" id="rates">
+            <button type="button" data-rate="0.5" aria-pressed="false">0.5×</button>
+            <button type="button" data-rate="0.25" aria-pressed="true">0.25×</button>
+            <button type="button" data-rate="0.125" aria-pressed="false">0.125×</button>
+          </div>
+        </div>
+        <div class="group">
+          <span class="label">Playback</span>
+          <div class="row">
+            <button type="button" id="playBtn">Pause</button>
+            <button type="button" id="soundBtn" aria-pressed="false">Sound</button>
+            <button type="button" id="fsBtn">Full screen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band contact" id="contact">
+    <div class="in">
+      <h2>Want this in your app?</h2>
+      <p class="lede">Tell us what you show and where. We will set up a pilot on your own footage.</p>
+      <div class="mail"><a class="addr" id="addr" href="mailto:george@slomo.tech">george@slomo.tech</a><button type="button" id="copyBtn">Copy email</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="in">© 2026 SloMo Technology Ltd</div></footer>
+
+<script>
+(function () {
+  var v = document.getElementById('v');
+  var stage = document.getElementById('stage');
+  var ring = document.getElementById('ring');
+  var rateEl = document.getElementById('rate');
+  var stateEl = document.getElementById('state');
+  var bar = document.getElementById('bar');
+  var flash = document.getElementById('flash');
+  var fail = document.getElementById('fail');
+  var brandOut = document.getElementById('brandOut');
+  var sponsorOn = document.getElementById('sponsorOn');
+  var sponsorName = document.getElementById('sponsorName');
+  var playBtn = document.getElementById('playBtn');
+  var soundBtn = document.getElementById('soundBtn');
+  var fsBtn = document.getElementById('fsBtn');
+  var fileInput = document.getElementById('file');
+  var clipname = document.getElementById('clipname');
+  var rateButtons = Array.prototype.slice.call(document.querySelectorAll('#rates button'));
+  var rate2 = document.getElementById('rate2');
+  var meter = document.getElementById('meter');
+
+  var s = { holding: false, hold: 0.25, speed: 1, target: 1, manual: false, mt: 0, paused: false, sound: false, force: false,
+            id: null, x0: 0, y0: 0, t0: 0, dx: 0, dy: 0, key: false, objectUrl: null };
+
+  function save(k, val) { try { localStorage.setItem('tts-' + k, String(val)); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem('tts-' + k); } catch (e) { return null; } }
+
+  function setHold(r) {
+    s.hold = r;
+    rateButtons.forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === r)); });
+    save('hold', r);
+  }
+  function setSponsor() {
+    stage.classList.toggle('withsponsor', sponsorOn.checked);
+    brandOut.textContent = (sponsorName.value || 'BRAND').toUpperCase();
+    save('sponsorOn', sponsorOn.checked ? '1' : '0');
+    save('sponsorName', sponsorName.value);
+  }
+
+  var savedHold = Number(load('hold'));
+  if (savedHold === 0.5 || savedHold === 0.25 || savedHold === 0.125) setHold(savedHold);
+  var so = load('sponsorOn'); if (so !== null) sponsorOn.checked = so === '1';
+  var sn = load('sponsorName'); if (sn !== null) sponsorName.value = sn;
+  setSponsor();
+
+  rateButtons.forEach(function (b) { b.addEventListener('click', function () { setHold(Number(b.dataset.rate)); }); });
+  sponsorOn.addEventListener('change', setSponsor);
+  sponsorName.addEventListener('input', setSponsor);
+
+  function targetFromDrag() {
+    var w = stage.clientWidth || 1;
+    var dx = s.dx;
+    var dead = 24;
+    if (performance.now() - s.t0 < 220) return s.hold;
+    dx = Math.abs(dx) < dead ? 0 : dx - Math.sign(dx) * dead;
+    // Logarithmic drag: the same distance always halves or doubles the speed (1x, 0.5x, 0.25x, 0.125x),
+    // so the control feels even along its whole length. Past the slowest forward speed comes freeze, then reverse.
+    var u = dx / w, octave = 0.2;
+    var uMin = octave * Math.log2(0.1 / s.hold);
+    if (u >= uMin) return Math.min(1, s.hold * Math.pow(2, u / octave));
+    var e = uMin - u;
+    return e < 0.06 ? 0 : -Math.min(1.5, (e - 0.06) * 4);
+  }
+
+  function startHold(x, y) {
+    s.holding = true; s.paused = false; playBtn.textContent = 'Pause';
+    s.x0 = x; s.y0 = y; s.t0 = performance.now(); s.dx = 0; s.dy = 0;
+    s.target = s.hold; s.force = true;
+    stage.classList.add('holding');
+    moveRing(x, y);
+  }
+  function endHold(swipeAllowed) {
+    if (!s.holding) return;
+    var quick = performance.now() - s.t0 < 350;
+    if (swipeAllowed && quick && s.dx < -50 && Math.abs(s.dy) < 80) rewind(3);
+    s.holding = false; s.target = 1; s.force = true;
+    stage.classList.remove('holding');
+  }
+  function moveRing(x, y) {
+    var r = stage.getBoundingClientRect();
+    ring.style.left = (x - r.left) + 'px';
+    ring.style.top = (y - r.top) + 'px';
+  }
+  function rewind(sec) {
+    if (!v.duration) return;
+    var t = v.currentTime - sec;
+    v.currentTime = t < 0 ? Math.max(0, v.duration + t) : t;
+    s.mt = v.currentTime;
+    flash.textContent = 'Back ' + sec + ' seconds';
+    flash.classList.add('on');
+    setTimeout(function () { flash.classList.remove('on'); }, 600);
+  }
+
+  stage.addEventListener('pointerdown', function (e) {
+    if (s.id !== null || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    s.id = e.pointerId;
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    startHold(e.clientX, e.clientY);
+    e.preventDefault();
+  });
+  stage.addEventListener('pointermove', function (e) {
+    if (e.pointerId !== s.id) return;
+    s.dx = e.clientX - s.x0; s.dy = e.clientY - s.y0;
+    s.target = targetFromDrag();
+    moveRing(e.clientX, e.clientY);
+  });
+  function up(e) {
+    if (e.pointerId !== s.id) return;
+    s.id = null;
+    endHold(e.type === 'pointerup');
+    if (!s.paused && v.paused) v.play().catch(function () {});
+  }
+  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointercancel', up);
+  stage.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+  stage.addEventListener('keydown', function (e) {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (!s.key && s.id === null) {
+        s.key = true;
+        var r = stage.getBoundingClientRect();
+        startHold(r.left + r.width / 2, r.top + r.height / 2);
+      }
+    } else if (e.code === 'ArrowLeft') { e.preventDefault(); rewind(3); }
+  });
+  stage.addEventListener('keyup', function (e) {
+    if (e.code === 'Space' && s.key) { s.key = false; endHold(false); }
+  });
+
+  playBtn.addEventListener('click', function () {
+    s.paused = !s.paused;
+    playBtn.textContent = s.paused ? 'Play' : 'Pause';
+    if (s.paused) v.pause(); else v.play().catch(function () {});
+  });
+  soundBtn.addEventListener('click', function () {
+    s.sound = !s.sound;
+    soundBtn.setAttribute('aria-pressed', String(s.sound));
+  });
+  if (!document.fullscreenEnabled || !stage.requestFullscreen) fsBtn.hidden = true;
+  fsBtn.addEventListener('click', function () {
+    if (document.fullscreenElement) { document.exitFullscreen().catch(function () {}); return; }
+    var p = stage.requestFullscreen(); if (p && p.catch) p.catch(function () {});
+  });
+
+  fileInput.addEventListener('change', function () {
+    var f = fileInput.files && fileInput.files[0];
+    if (!f) return;
+    if (s.objectUrl) { try { URL.revokeObjectURL(s.objectUrl); } catch (e) {} }
+    s.objectUrl = URL.createObjectURL(f);
+    fail.hidden = true;
+    v.removeAttribute('poster');
+    v.src = s.objectUrl;
+    v.load();
+    s.paused = false; playBtn.textContent = 'Pause';
+    v.play().catch(function () {});
+    clipname.textContent = 'Showing: ' + f.name;
+  });
+  v.addEventListener('loadedmetadata', function () {
+    if (v.videoWidth && v.videoHeight) stage.style.setProperty('--ar', String(v.videoWidth / v.videoHeight));
+    s.mt = 0;
+  });
+  v.addEventListener('error', function () { fail.hidden = false; });
+
+  var last = performance.now();
+  var lastSet = 0;
+  function frame(now) {
+    var dt = Math.min(0.1, (now - last) / 1000); last = now;
+    // Three modes. Slow motion is the device's own player at a fixed step (one rate change at a time,
+    // never a stream of tiny ones, which phones stutter on). A freeze is a plain pause. Only reverse seeks.
+    var t = s.target, goal;
+    if (t >= 0.09) goal = Math.min(1, t);
+    else if (t > -0.1) goal = 0;
+    else goal = t;
+    // Forward speed eases to its goal along a logarithmic curve: each instant covers the same ratio of speed,
+    // not the same amount, which is how a change of speed is felt. It settles in about a quarter of a second.
+    if (goal > 0) {
+      var from = Math.log(s.speed > 0.1 ? s.speed : 0.1), to = Math.log(goal);
+      var ln = from + (to - from) * (1 - Math.exp(-dt / 0.085));
+      s.speed = Math.abs(to - ln) < 0.02 ? goal : Math.exp(ln);
+    } else s.speed = goal;
+    var eff = s.speed;
+
+    var dur = v.duration;
+    if (dur && isFinite(dur) && !s.paused) {
+      if (eff > 0) {
+        s.manual = false;
+        // The player is told in steps of about 7 percent, at most one every 60 ms, and once more exactly on arrival.
+        var cur = v.playbackRate || 1;
+        if ((eff === goal && cur !== eff) || (Math.abs(Math.log(eff / cur)) > 0.07 && now - lastSet > 60)) {
+          try { v.playbackRate = eff; } catch (e) {}
+          lastSet = now;
+        }
+        if (v.paused) v.play().catch(function () {});
+      } else {
+        if (!s.manual) { s.manual = true; s.mt = v.currentTime; }
+        if (!v.paused) v.pause();
+        if (eff < 0) {
+          s.mt += eff * dt;
+          if (s.mt < 0) s.mt += dur;
+          if (!v.seeking && Math.abs(v.currentTime - s.mt) > 0.02) v.currentTime = s.mt;
+        }
+      }
+    }
+    var wantMuted = !s.sound || s.speed < 0.97;
+    if (v.muted !== wantMuted) v.muted = wantMuted;
+
+    var sp = s.paused ? 0 : s.speed;
+    rateEl.textContent = Math.abs(sp).toFixed(2) + '×';
+    rate2.textContent = rateEl.textContent;
+    meter.style.width = Math.round(100 * Math.min(1, Math.abs(sp))) + '%';
+    stateEl.textContent = s.paused ? 'Paused' : sp < -0.02 ? 'Rewind' : sp < 0.02 ? 'Frozen' : sp < 0.98 ? 'Slow' : 'Full speed';
+    stage.classList.toggle('slow', !s.paused && sp < 0.98);
+    if (dur && isFinite(dur)) bar.style.width = (100 * (s.manual ? s.mt : v.currentTime) / dur) + '%';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  function toClip() { try { stage.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { stage.scrollIntoView(); } }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-toclip]'), function (b) { b.addEventListener('click', toClip); });
+  document.getElementById('file').addEventListener('change', function () { if (this.files && this.files[0]) toClip(); });
+
+  var addr = document.getElementById('addr'), copyBtn = document.getElementById('copyBtn');
+  function done() { copyBtn.textContent = 'Copied'; setTimeout(function () { copyBtn.textContent = 'Copy email'; }, 1600); }
+  function select() {
+    var r = document.createRange(); r.selectNodeContents(addr);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    copyBtn.textContent = 'Selected. Copy it from here';
+  }
+  copyBtn.addEventListener('click', function () {
+    try { navigator.clipboard.writeText(addr.textContent).then(done, select); } catch (e) { select(); }
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var v = document.getElementById('v');
+  v.src = 'swing.mp4';
+  v.load();
+  var p = v.play(); if (p && p.catch) p.catch(function () {});
+})();
+</script>
+</body>
+</html>
