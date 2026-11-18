@@ -590,9 +590,9 @@ input[type="text"] {
 
   // How the clip was used on this visit, as counts and times only: how long it was open, how many holds,
   // time held and slowed, and the slowest point. No video, no touch positions, and nothing that says who is
-  // watching. Sent once when the page is left. USAGE.url is empty until the SloMo API address is filled in,
-  // and while it is empty nothing is sent.
-  var USAGE = { url: '', key: 'sm_5e908f8367977fabd93cad5e95f8a7e0' };
+  // watching. Sent once when the page is left, to the SloMo API. With USAGE.url empty
+  // nothing is sent.
+  var USAGE = { url: 'https://slomo-api.george-951.workers.dev', key: 'sm_5e908f8367977fabd93cad5e95f8a7e0' };
   var use = null;
   function useReset() { use = { open: 0, hold: 0, slow: 0, frozen: 0, rewind: 0, holds: 0, rewinds: 0, jumps: 0, min: 1, back: false }; }
   useReset();
