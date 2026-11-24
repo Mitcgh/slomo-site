@@ -24,13 +24,7 @@
 <link rel="preload" as="image" href="poster.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-html, body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-a.addr { color: inherit; text-decoration: none; }
-a.addr:hover, a.addr:focus-visible { text-decoration: underline; }
-/* Layout: the live clip is the hero. Wide screens: copy on the left, the clip inside a phone on the right.
-   Phones: headline, then the clip at full width, then everything else in one column. One dark look, SloMo's own. */
+/* Colours and type follow the "Website" variables and "Web/" text styles in the Figma file SloMo Master, page "Website". */
 :root {
   --night: #070B12;
   --deck: #0C121C;
@@ -39,104 +33,130 @@ a.addr:hover, a.addr:focus-visible { text-decoration: underline; }
   --line2: #35455C;
   --text: #F4F6FA;
   --muted: #9BA7B8;
-  --dim: #66727F;
-  --court: #1A4DB3;
-  --sky: #5CABFF;
-  --ball: #DAF24A;
+  --lime: #DAF24A;
   --ink: #070B12;
   --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   color-scheme: dark;
 }
-body { background: var(--night); color: var(--text); font-family: var(--font); font-size: 17px; line-height: 1.55; }
+html, body { margin: 0; }
+html { scroll-behavior: smooth; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body { background: var(--night); color: var(--text); font-family: var(--font); font-size: 17px; line-height: 1.55; -webkit-text-size-adjust: 100%; }
+h1, h2, h3, p, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+
+/* Wide screens: 1120 wide inside 160 either side at 1440, as in the frame. Phones: 20 either side. */
 .in {
   max-width: 1120px; margin: 0 auto; box-sizing: border-box;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
 }
-h1, h2, h3, p { margin: 0; }
-h1 { font-size: clamp(34px, 5.4vw, 64px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; text-wrap: balance; }
-h2 { font-size: clamp(26px, 3.2vw, 38px); line-height: 1.12; letter-spacing: -0.025em; font-weight: 700; text-wrap: balance; }
-h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 700; }
-.lede { color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); max-width: 34em; }
-.muted { color: var(--muted); }
+@media (min-width: 900px) { .in { max-width: 1160px; } }
 
-.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; }
-.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+/* Text styles */
+.display { font-size: 64px; line-height: 1.04; letter-spacing: -0.035em; font-weight: 800; }
+h2, .h2 { font-size: 40px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 700; }
+h3, .h3 { font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 700; }
+.lede { font-size: 20px; line-height: 1.5; color: var(--muted); }
+.small { font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted); }
+.strong { font-weight: 600; line-height: 1.4; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  font: inherit; font-size: 16px; line-height: 1.2; font-weight: 600; text-decoration: none; cursor: pointer;
+  padding: 14px 24px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap;
+}
+.btn.primary { background: var(--lime); color: var(--ink); }
+.btn.outline { background: transparent; color: var(--text); border-color: var(--line2); }
+.btn.dark { background: var(--ink); color: var(--text); }
+.btn.outline:hover { border-color: var(--text); }
+.btn.primary:hover, .btn.dark:hover { filter: brightness(1.08); }
+.chip {
+  font: inherit; font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--text); background: transparent; cursor: pointer;
+  padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line2); white-space: nowrap;
+}
+.chip:hover { border-color: var(--text); }
+.chip[aria-pressed="true"] { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+
+/* Top bar */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 20px; }
+.brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .brand img { height: 40px; width: auto; display: block; }
-.brand span { color: var(--muted); padding-left: 12px; border-left: 1px solid var(--line2); }
-.toplink { color: var(--text); font-weight: 600; font-size: 15px; text-decoration: none; padding: 9px 16px; border: 1px solid var(--line2); border-radius: 999px; }
-.toplink:hover { border-color: var(--sky); }
-.toplink:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.brand .rule { width: 1px; height: 28px; background: var(--line2); }
+.brand .zone { font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 700; color: var(--muted); }
+.links { display: flex; gap: 36px; }
+.links a { font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.links a:hover { color: var(--text); }
 
+/* Hero: copy on the left, the live clip inside a phone on the right. */
 .hero {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "head phone" "how phone";
-  grid-template-rows: auto 1fr; column-gap: 72px; row-gap: 32px; align-items: start; padding-block: 28px 88px;
+  grid-template-rows: auto 1fr; column-gap: 88px; align-items: start; padding-block: 40px 96px;
 }
-.hero-head { grid-area: head; display: flex; flex-direction: column; gap: 18px; padding-top: 48px; }
-.hero-how { grid-area: how; }
+.hero-head { grid-area: head; display: flex; flex-direction: column; gap: 28px; padding-top: 40px; }
+.hero-head .lede { max-width: 520px; }
+.hero-head .lede.short { display: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.how { grid-area: how; padding-top: 56px; }
+.how li { display: flex; gap: 24px; padding: 18px 0; border-top: 1px solid var(--line); }
+.how b { flex: 0 0 88px; color: var(--lime); font-weight: 600; line-height: 1.4; }
+.how span { color: var(--muted); min-width: 0; }
 .stagecol { grid-area: phone; display: flex; justify-content: center; min-width: 0; }
 
+/* The phone. Its height is kept inside the window, so the whole clip shows at once. */
 .phone {
-  width: clamp(270px, calc(84vh * 0.4615), 372px); max-width: 100%; aspect-ratio: 9 / 19.5; box-sizing: border-box;
-  border: 10px solid #1A2230; border-radius: 54px; background: #000; box-shadow: 0 0 0 2px #2B3648; overflow: hidden;
+  width: min(372px, calc((100vh - 140px) * 0.4615)); min-width: 260px; aspect-ratio: 372 / 806; box-sizing: border-box;
+  border: 10px solid var(--line); border-radius: 54px; background: #000; overflow: hidden;
 }
-.screen { height: 100%; display: flex; flex-direction: column; background: #05070B; }
-.status { display: flex; justify-content: space-between; align-items: center; padding: 12px 26px 4px; font-weight: 600; font-size: 14px; }
-.status .island { width: 92px; height: 26px; border-radius: 13px; background: #000; border: 1px solid #1A2230; }
-.status .sig { display: flex; gap: 4px; }
-.status .sig i { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--text); }
-.appbar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 18px 10px; }
-.appbar .t { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
-.appbar .by { color: var(--muted); font-size: 13px; }
+.screen { height: 100%; display: flex; flex-direction: column; }
 .stage {
-  position: relative; flex: 1; min-height: 0; margin: 0 10px;
-  background: #000; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  position: relative; flex: 1; min-height: 0; background: #000; border-radius: 44px; overflow: hidden;
   touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer;
   container-type: inline-size;
 }
-.stage:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
-.stage video, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.stage:focus-visible { outline: 3px solid var(--lime); outline-offset: -3px; }
+.stage video, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 /* The canvas is where the page paints frames it has decoded itself. It takes over from the video once its first frame is up. */
 .stage canvas { display: none; }
 .stage.engine canvas { display: block; }
 .stage.engine video { opacity: 0; }
-.hintrow { display: flex; align-items: center; gap: 12px; padding: 12px 18px 10px; font-size: 14px; font-weight: 500; color: var(--muted); }
-.hintrow .meter { flex: 1; min-width: 24px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
-.hintrow .meter i { display: block; height: 100%; width: 100%; background: var(--ball); }
-.hintrow .r { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
-.homebar { align-self: center; width: 120px; height: 5px; border-radius: 3px; background: var(--text); opacity: 0.85; margin: 2px 0 10px; }
+/* A second speed readout and meter the player script keeps up to date. The design shows only the one on the clip. */
+.hintrow { display: none; }
 .hud {
-  position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; align-items: baseline;
-  height: 42px; box-sizing: border-box; padding: 8px 14px; border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
-  font-size: 16px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none;
+  position: absolute; left: 18px; top: 20px; display: flex; gap: 8px; align-items: baseline;
+  box-sizing: border-box; padding: 9px 14px; border-radius: 999px; background: var(--night); border: 1px solid var(--line2);
+  font-size: 16px; line-height: 1.2; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none;
 }
-.hud .state { color: var(--muted); font-weight: 500; font-size: 14px; }
-.stage.slow .hud { border-color: var(--ball); }
-.stage.slow .hud .rate { color: var(--ball); }
+.hud .state { color: var(--muted); font-weight: 500; font-size: 14px; line-height: 1.4; }
+.stage.slow .hud { border-color: var(--lime); }
+.stage.slow .hud .rate { color: var(--lime); }
 .ring {
-  position: absolute; left: 0; top: 0; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%;
-  border: 3px solid var(--ball); opacity: 0; transform: scale(0.6); transition: opacity 0.18s, transform 0.18s; pointer-events: none;
+  position: absolute; left: 0; top: 0; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; box-sizing: border-box;
+  border: 3px solid var(--lime); opacity: 0; transform: scale(0.6); transition: opacity 0.18s, transform 0.18s; pointer-events: none;
 }
-.ring::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--ball); }
+.ring::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--lime); }
 .stage.holding .ring { opacity: 1; transform: scale(1); }
 .sponsor {
-  position: absolute; right: 14px; top: 14px; height: 42px; box-sizing: border-box; padding: 0 12px 0 14px;
-  display: flex; align-items: center; gap: 8px;
-  border-radius: 999px; background: rgba(7, 11, 18, 0.74); border: 1px solid var(--line2);
+  position: absolute; right: 18px; top: 20px; box-sizing: border-box; padding: 9px 14px;
+  display: flex; align-items: center; gap: 8px; border-radius: 999px; background: var(--night); border: 1px solid var(--line2);
   opacity: 0; transition: opacity 0.35s; pointer-events: none;
 }
 .stage.holding.withsponsor .sponsor { opacity: 1; }
-.sponsor .by { letter-spacing: 0.1em; text-transform: uppercase; font-size: 9px; line-height: 1.25; font-weight: 600; color: #C9D2DE; text-align: right; white-space: nowrap; }
-.sponsor img { display: block; height: 26px; width: auto; }
+.sponsor .by { font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.sponsor img { display: block; height: 22px; width: auto; }
 /* On a narrow clip the speed readout drops its word so the two pills still fit on one line. */
 @container (max-width: 299px) {
   .hud { left: 10px; padding: 8px 12px; }
   .hud .state { display: none; }
-  .sponsor { right: 10px; padding: 0 10px; gap: 6px; }
-  .sponsor .by { font-size: 8px; letter-spacing: 0.06em; }
-  .sponsor img { height: 22px; }
+  .sponsor { right: 10px; padding: 8px 10px; gap: 6px; }
+  .sponsor .by { font-size: 12px; }
+  .sponsor img { height: 18px; }
 }
-.bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--ball); pointer-events: none; }
+.bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--lime); pointer-events: none; }
 .flash {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   font-size: 34px; font-weight: 700; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 0.25s; pointer-events: none;
@@ -144,231 +164,441 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 7
 .flash.on { opacity: 1; }
 .fail { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; background: var(--deck); color: var(--muted); }
 
-.how { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); max-width: 34em; }
-.how li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.how b { flex: 0 0 72px; color: var(--ball); font-weight: 600; }
-.how span { color: var(--muted); min-width: 0; }
-
-.band { border-top: 1px solid var(--line); }
+/* Sections */
+.band { background: var(--night); }
 .band.alt { background: var(--deck); }
-.band > .in { padding-block: 72px; display: flex; flex-direction: column; gap: 32px; }
-.sechead { display: flex; flex-direction: column; gap: 12px; }
-.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.card { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.card p { color: var(--muted); }
-.points { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
-.points li { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
-.band > .in.split > .cards { grid-column: 1 / -1; }
-.steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
-.steps li {
-  counter-increment: step; background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 20px;
-  display: flex; flex-direction: column; gap: 28px; font-size: 19px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
-}
-.steps li::before { content: counter(step); color: var(--ball); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.closing { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; letter-spacing: -0.02em; }
-.band > .in.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
-.panel { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-.group { display: flex; flex-direction: column; gap: 10px; }
-.group > .label { font-size: 14px; font-weight: 600; color: var(--muted); }
-.row { display: flex; flex-wrap: wrap; gap: 8px; }
-button, .filebtn {
-  font: inherit; font-size: 16px; font-weight: 600; color: var(--text); background: var(--deck); border: 1px solid var(--line2);
-  border-radius: 12px; padding: 10px 16px; cursor: pointer;
-}
-button:hover, .filebtn:hover { border-color: var(--sky); }
-button:focus-visible, .filebtn:focus-within, input:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
-button[aria-pressed="true"] { background: var(--ball); border-color: var(--ball); color: var(--ink); }
-.filebtn { display: inline-flex; align-items: center; align-self: flex-start; position: relative; }
-.filebtn.primary, button.primary { background: var(--sky); border-color: var(--sky); color: var(--ink); }
-.filebtn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.check { display: flex; align-items: center; gap: 10px; }
-.check input { width: 18px; height: 18px; accent-color: var(--ball); }
-input[type="text"] {
-  font: inherit; color: var(--text); background: var(--deck); border: 1px solid var(--line2); border-radius: 12px;
-  padding: 10px 14px; width: 100%; box-sizing: border-box;
-}
-.note { font-size: 15px; color: var(--muted); }
-.clipname { font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+.band > .in { padding-block: 96px; }
+.split { display: grid; grid-template-columns: 460px minmax(0, 1fr); column-gap: 88px; align-items: start; }
+.split.mid { align-items: center; }
+.split.angle-split { grid-template-columns: auto minmax(0, 1fr); }
+.copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.squares { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+.squares li { display: flex; align-items: center; gap: 14px; font-weight: 600; line-height: 1.4; }
+.squares li::before { content: ""; flex: 0 0 8px; height: 8px; background: var(--lime); }
+.uses li { display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid var(--line2); }
+.uses p { color: var(--muted); }
 
-.contact { background: var(--court); border-top: 0; }
-.contact > .in { gap: 20px; }
-.contact .lede { color: #D6E4FF; }
-.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-.mail .addr { font-size: clamp(22px, 3vw, 32px); font-weight: 700; letter-spacing: -0.02em; user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
-.mail button { background: var(--text); border-color: var(--text); color: var(--ink); }
-.foot { color: var(--muted); font-size: 14px; }
-.foot > .in { padding-block: 24px 32px; }
+/* Multi-angle: the tiles are stills. Choosing one marks it as the angle in use. */
+.angles { display: flex; gap: 16px; }
+.angle {
+  position: relative; flex: 0 0 176px; height: 312px; padding: 0; box-sizing: border-box; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 18px; background: var(--raised);
+}
+.angle img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.angle[aria-pressed="true"] { border: 2px solid var(--lime); }
+.angle .tag {
+  position: absolute; left: 10px; bottom: 10px; padding: 6px 12px; border-radius: 999px; background: var(--night);
+  font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted);
+}
+.angle[aria-pressed="true"] .tag { color: var(--lime); }
+.angle:hover { border-color: var(--line2); }
+.angle[aria-pressed="true"]:hover { border-color: var(--lime); }
 
-@media (max-width: 860px) {
-  .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "phone" "how"; grid-template-rows: none; row-gap: 20px; padding-block: 8px 48px; }
-  .hero-head { padding-top: 8px; gap: 10px; }
-  /* On a real phone the device is the frame, so the mock bezel, status bar, app bar and home bar go. */
-  .phone { width: 100%; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none; background: transparent; overflow: visible; }
-  .screen { height: auto; background: transparent; align-items: center; }
-  .status, .homebar, .appbar { display: none; }
-  .stage { flex: none; margin: 0; width: min(100%, calc(66vh * var(--ar, 0.5625))); aspect-ratio: var(--ar, 0.5625); border-radius: 20px; }
-  .hintrow { padding: 12px 2px 0; align-self: stretch; }
-  .band > .in { padding-block: 48px; gap: 24px; }
-  .cards, .band > .in.split, .steps { grid-template-columns: minmax(0, 1fr); }
-  .steps { gap: 10px; }
-  .steps li { flex-direction: row; align-items: baseline; gap: 16px; padding: 16px 20px; }
-  .steps li::before { flex: 0 0 auto; }
-  .band > .in.split { gap: 24px; }
-  .brand img { height: 34px; }
+/* Sponsor example and switch */
+.sponsorside { display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.sponsorpill {
+  display: flex; align-items: center; gap: 18px; padding: 22px 32px; border-radius: 999px;
+  background: var(--raised); border: 1px solid var(--line2); white-space: nowrap;
+}
+.sponsorpill .by { color: var(--muted); }
+.switch { display: flex; align-items: center; gap: 12px; font-weight: 600; line-height: 1.4; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.switch .track { position: relative; flex: 0 0 44px; height: 26px; border-radius: 13px; background: var(--line2); transition: background 0.2s; }
+.switch .track::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--text); transition: transform 0.2s, background 0.2s;
+}
+.switch input:checked + .track { background: var(--lime); }
+.switch input:checked + .track::after { transform: translateX(18px); background: var(--night); }
+.switch input:focus-visible + .track { outline: 3px solid var(--lime); outline-offset: 3px; }
+
+/* The replay is the ad: a story with a link, then the replay it opens. Both phones are drawn, not real apps.
+   Inside each phone, sizes are in --u, one 250th of the phone's width, so the pair scales down on small screens. */
+.adsplit { display: grid; grid-template-columns: 460px minmax(0, 1fr); column-gap: 88px; align-items: center; }
+.adsplit .copy .lede { max-width: 460px; }
+.dots { display: flex; flex-direction: column; gap: 14px; }
+.dots li { display: flex; gap: 12px; align-items: flex-start; }
+.dots img { flex: 0 0 8px; width: 8px; height: 17px; display: block; }
+.storypair { display: flex; align-items: center; gap: 28px; justify-content: flex-end; }
+.storypair .arrow { font-size: 40px; line-height: 1.1; font-weight: 700; color: var(--lime); letter-spacing: -0.025em; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 0 1 250px; min-width: 0; margin: 0; }
+.step figcaption { font-weight: 600; line-height: 1.4; color: var(--muted); white-space: nowrap; }
+.mock { width: 100%; container-type: inline-size; }
+.mockscreen {
+  --u: calc(100cqw / 250);
+  position: relative; width: 100%; aspect-ratio: 250 / 540; overflow: hidden; box-sizing: border-box;
+  border-radius: calc(34 * var(--u)); border: 1px solid var(--line); background: var(--raised);
+  font-size: max(9px, calc(11 * var(--u))); line-height: normal; color: #fff;
+}
+.mockscreen > img.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.mockscreen .shade-top { position: absolute; left: 0; right: 0; top: 0; height: calc(120 * var(--u)); background: linear-gradient(rgba(0,0,0,0.62), rgba(0,0,0,0)); }
+.mockscreen .shade-bot { position: absolute; left: 0; right: 0; bottom: 0; height: calc(170 * var(--u)); background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7)); }
+.mockscreen .progress { position: absolute; left: calc(11 * var(--u)); right: calc(11 * var(--u)); top: calc(11 * var(--u)); height: max(1.5px, calc(2.5 * var(--u))); border-radius: 2px; background: rgba(255,255,255,0.35); }
+.mockscreen .progress i { display: block; width: 45%; height: 100%; border-radius: 2px; background: #fff; }
+.mockscreen .account { position: absolute; left: calc(11 * var(--u)); top: calc(23 * var(--u)); display: flex; align-items: center; gap: calc(7 * var(--u)); }
+.mockscreen .account img { width: calc(24 * var(--u)); height: calc(24 * var(--u)); display: block; }
+.mockscreen .account b { font-weight: 600; }
+.mockscreen .account span { color: rgba(255,255,255,0.7); }
+.mockscreen .pill {
+  position: absolute; display: flex; align-items: center; gap: 6px; padding: calc(6 * var(--u)) calc(10 * var(--u));
+  border-radius: 999px; background: rgba(8,10,18,0.78); white-space: nowrap;
+}
+.mockscreen .pill .muted { color: rgba(255,255,255,0.75); }
+.northline { display: flex; align-items: center; gap: calc(5 * var(--u)); font-weight: 700; font-size: max(8px, calc(12 * var(--u))); letter-spacing: -0.02em; color: #fff; }
+.northline img { width: calc(16 * var(--u)); height: calc(16 * var(--u)); display: block; }
+.mockscreen .presented { left: calc(11 * var(--u)); top: calc(407 * var(--u)); }
+.mockscreen .headline { position: absolute; left: calc(11 * var(--u)); top: calc(441 * var(--u)); font-weight: 700; font-size: calc(17 * var(--u)); white-space: nowrap; }
+.mockscreen .sticker {
+  position: absolute; left: calc(11 * var(--u)); top: calc(477 * var(--u)); display: flex; align-items: center; gap: 6px;
+  padding: calc(8 * var(--u)) calc(12 * var(--u)); border-radius: 999px; background: #fff; color: #080A12; font-weight: 700; white-space: nowrap;
+}
+.mockscreen .sticker img { width: calc(8 * var(--u)); height: calc(8 * var(--u)); display: block; }
+.mockscreen .speed {
+  position: absolute; left: calc(11 * var(--u)); top: calc(15 * var(--u)); padding: calc(6 * var(--u)) calc(10 * var(--u));
+  border-radius: 999px; background: var(--night); border: 1px solid var(--lime); color: var(--lime); font-weight: 700; white-space: nowrap;
+}
+.mockscreen .replayby { left: calc(86 * var(--u)); top: calc(14.5 * var(--u)); }
+.mockscreen .tring { position: absolute; left: calc(139 * var(--u)); top: calc(301.4 * var(--u)); width: calc(64 * var(--u)); height: calc(64 * var(--u)); display: block; }
+.mockscreen .tpoint { position: absolute; left: calc(165.5 * var(--u)); top: calc(327.9 * var(--u)); width: calc(11 * var(--u)); height: calc(11 * var(--u)); display: block; }
+.mockscreen .partnerbar {
+  position: absolute; left: calc(11 * var(--u)); right: calc(11 * var(--u)); top: calc(489 * var(--u)); height: calc(30 * var(--u));
+  display: flex; align-items: center; justify-content: space-between; font-weight: 700;
+}
+.mockscreen .partnerbar span:last-child { padding: calc(6 * var(--u)) calc(10 * var(--u)); border-radius: 999px; background: var(--lime); color: var(--ink); }
+.mockscreen .replaybar { position: absolute; left: 0; bottom: 0; width: 42%; height: calc(3 * var(--u)); background: var(--lime); }
+
+/* Five steps */
+.steps-head { display: flex; flex-direction: column; gap: 16px; }
+.band > .in.stack { display: flex; flex-direction: column; gap: 48px; }
+.steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+.steps li { display: flex; flex-direction: column; gap: 14px; padding: 20px 0; border-top: 1px solid var(--line2); font-weight: 600; line-height: 1.4; }
+.steps .n { font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; color: var(--lime); }
+
+/* Footage spec */
+.spec li { display: flex; gap: 24px; padding: 20px 0; border-top: 1px solid var(--line2); line-height: 1.4; }
+.spec .k { flex: 0 0 120px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.spec .v { font-weight: 600; min-width: 0; }
+
+/* Try your own clip */
+.panel { background: var(--raised); border: 1px solid var(--line); border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.group { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; }
+.filebtn { position: relative; }
+.filebtn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.filebtn:focus-within { outline: 3px solid var(--lime); outline-offset: 3px; }
+.clipname { overflow-wrap: anywhere; }
+
+/* Contact */
+.contact { background: var(--lime); color: var(--ink); }
+.contact > .in { padding-block: 112px; display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+.contact .lede { color: var(--ink); max-width: 560px; }
+.contact :focus-visible { outline-color: var(--ink); }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding-top: 12px; }
+.mail .addr { font-size: 40px; line-height: 1.1; letter-spacing: -0.025em; font-weight: 700; text-decoration: none; user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.mail .addr:hover { text-decoration: underline; }
+
+/* Footer */
+.foot > .in { display: flex; justify-content: space-between; align-items: center; gap: 10px 28px; flex-wrap: wrap; padding-block: 32px; font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted); }
+.foot .flinks { display: flex; gap: 28px; }
+.foot a { text-decoration: none; }
+.foot a:hover { color: var(--text); text-decoration: underline; }
+
+/* Narrower desktops: the ad format's copy goes above the phones. */
+@media (max-width: 1239px) {
+  .adsplit { grid-template-columns: minmax(0, 1fr); row-gap: 48px; }
+  .storypair { justify-content: flex-start; }
+}
+/* Tablets and phones: one column, in the order of the phone frame. */
+@media (max-width: 899px) {
+  .links { display: none; }
+  .top { padding-block: 14px; }
+  .brand { gap: 12px; }
+  .brand img { height: 36px; }
+  .brand .rule { height: 24px; }
+  .brand .zone { font-size: 17px; line-height: 1.4; font-weight: 600; letter-spacing: 0; }
+  .top .btn { padding: 10px 16px; font-size: 14px; line-height: 1.4; font-weight: 500; }
+  .display { font-size: 36px; line-height: 1.06; letter-spacing: -0.03em; }
+  h2, .h2 { font-size: 28px; line-height: 1.14; letter-spacing: -0.02em; }
+  .lede { font-size: 17px; line-height: 1.55; }
+  .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "phone" "how"; grid-template-rows: none; row-gap: 16px; padding-block: 10px 48px; }
+  .hero-head { padding-top: 0; gap: 16px; }
+  .hero-head .lede.long, .hero .actions { display: none; }
+  .hero-head .lede.short { display: block; }
+  .how { padding-top: 24px; }
+  .how li { gap: 16px; padding: 16px 0; }
+  .how b { flex-basis: 64px; }
+  /* On a phone the device is the frame: the clip stands alone, sized so the headline and the whole clip fit on one screen. */
+  .phone { width: 100%; min-width: 0; aspect-ratio: auto; border: 0; border-radius: 0; background: transparent; overflow: visible; }
+  .screen { height: auto; align-items: center; }
+  .stage { flex: none; width: min(100%, calc((100svh - 300px) * var(--ar, 0.5625))); min-width: min(100%, 200px); aspect-ratio: var(--ar, 0.5625); border-radius: 22px; border: 1px solid var(--line); box-sizing: border-box; }
+  .stage video, .stage canvas { object-fit: contain; }
+  .hud { left: 11px; top: 11px; padding: 8px 12px; }
+  .sponsor { right: 11px; top: 11px; padding: 8px 12px; }
+  .sponsor img { height: 20px; }
+  .band > .in { padding-block: 56px; }
+  .split, .split.mid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .uses li { gap: 8px; padding: 20px 0; }
+  .uses .h2 { font-size: 28px; }
+  .angle-split .copy { order: -1; }
+  .angles { gap: 10px; }
+  .angle { flex: 1 1 0; min-width: 0; height: auto; aspect-ratio: 104 / 196; border-radius: 14px; }
+  .angle .tag { left: 6px; bottom: 6px; padding: 5px 10px; }
+  .sponsorpill { gap: 12px; padding: 16px 22px; }
+  .sponsorpill .by { font-size: 14px; font-weight: 500; }
+  .sponsorpill .h3 { font-size: 17px; font-weight: 600; letter-spacing: 0; line-height: 1.4; }
+  .adsplit { row-gap: 24px; }
+  .adsplit .copy { display: contents; }
+  .adsplit .copy h2 { order: 1; }
+  .adsplit .copy .lede { order: 2; }
+  .adsplit .storypair { order: 3; }
+  .adsplit .dots { order: 4; }
+  .storypair { gap: 14px; align-items: flex-start; }
+  .storypair .arrow { display: none; }
+  .step { flex: 1 1 0; max-width: 168px; }
+  .step figcaption { font-size: 14px; font-weight: 500; }
+  .band > .in.stack { gap: 24px; }
+  .steps-head { gap: 24px; }
+  .steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .steps li { flex-direction: row; align-items: center; gap: 16px; padding: 14px 0; }
+  .steps .n { flex: 0 0 32px; font-size: 28px; line-height: 1.14; font-weight: 700; letter-spacing: -0.02em; }
+  .spec li { flex-direction: column; gap: 4px; padding: 14px 0; }
+  .spec .k { flex: none; }
+  .panel { padding: 20px; gap: 22px; border-radius: 18px; }
+  .panel .filebtn { align-self: stretch; }
+  .group { gap: 10px; }
+  .row { gap: 8px; }
+  .chip { padding: 11px 16px; }
+  .contact > .in { padding-block: 64px; gap: 18px; align-items: stretch; }
+  .mail { flex-direction: column; align-items: stretch; gap: 18px; padding-top: 0; }
+  .mail .addr { font-size: 28px; line-height: 1.14; letter-spacing: -0.02em; }
+  .foot > .in { flex-direction: column; align-items: flex-start; padding-block: 28px; }
+  .foot .flinks { gap: 24px; }
+}
+/* Tablets: keep the angle tiles and the two phones from growing too wide. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .angles { max-width: 560px; }
+  .step { max-width: 250px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ring, .sponsor, .flash { transition: none; }
   html { scroll-behavior: auto; }
+  .ring, .sponsor, .flash, .switch .track, .switch .track::after { transition: none; }
 }
 </style>
 </head>
 <body>
 <header class="in top">
-  <div class="brand"><img src="logo.svg" alt="SloMo" width="360" height="350"><span>Zone</span></div>
-  <a class="toplink" href="#contact">Get in touch</a>
+  <a class="brand" href="#top" aria-label="SloMo Zone, back to the top"><img src="logo.svg" alt="" width="360" height="350"><span class="rule" aria-hidden="true"></span><span class="zone">Zone</span></a>
+  <nav class="links" aria-label="On this page">
+    <a href="#how">How it works</a>
+    <a href="#rights">For rights holders</a>
+    <a href="#sponsors">Sponsors</a>
+    <a href="#try">Try your own clip</a>
+  </nav>
+  <a class="btn outline" href="#contact">Get in touch</a>
 </header>
 
-<main>
+<main id="top">
   <section class="in hero">
     <div class="hero-head">
-      <h1>Touch the video to slow it down</h1>
-      <p class="lede">Touch the clip and it slows. Let go and it is back to full speed. That is Touch To Slow, and it works on any sports video.</p>
+      <h1 class="display">Touch the video to slow it down</h1>
+      <p class="lede long">SloMo is the interactive layer for sports video. Fans touch a replay to slow it, move left to rewind and let go to play on.</p>
+      <p class="lede short">The interactive layer for sports video. Touch the clip to try it.</p>
+      <div class="actions">
+        <a class="btn primary" href="#contact">Get in touch</a>
+        <button type="button" class="btn outline" data-toclip>Try it on the clip</button>
+      </div>
     </div>
 
     <div class="stagecol">
       <div class="phone">
         <div class="screen">
-          <div class="status" aria-hidden="true"><span>9:41</span><span class="island"></span><span class="sig"><i></i><i></i><i></i></span></div>
-          <div class="appbar"><span class="t">Interactive replays</span><span class="by">by SloMo</span></div>
           <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch it to slow it down, or hold the space bar.">
             <video id="v" poster="poster.jpg" playsinline muted loop autoplay preload="auto" disablepictureinpicture></video>
             <canvas id="cv"></canvas>
-            <div class="sponsor" aria-hidden="true"><span class="by">Replay<br>sponsored by</span><img src="logo.svg" alt="" width="360" height="350"></div>
+            <div class="sponsor" aria-hidden="true"><span class="by">Sponsored by</span><img src="logo.svg" alt="" width="360" height="350"></div>
             <div class="bar" id="bar"></div>
             <div class="ring" id="ring"></div>
             <div class="hud" aria-live="off"><span class="rate" id="rate">1.00×</span><span class="state" id="state">Full speed</span></div>
             <div class="flash" id="flash">Back 3 seconds</div>
             <div class="fail" id="fail" hidden>This file could not be played here. Try an MP4 or MOV clip.</div>
           </div>
-          <div class="hintrow"><span>Touch to slow</span><span class="meter"><i id="meter"></i></span><span class="r" id="rate2">1.00×</span></div>
-          <div class="homebar" aria-hidden="true"></div>
+          <div class="hintrow" aria-hidden="true"><span>Touch to slow</span><span class="meter"><i id="meter"></i></span><span class="r" id="rate2">1.00×</span></div>
         </div>
       </div>
     </div>
 
-    <ul class="how hero-how">
+    <ul class="how" id="how">
       <li><b>Touch</b><span>Touch anywhere on the video to slow it. Let go to return to full speed.</span></li>
       <li><b>Rewind</b><span>While touching, move a little to the left to rewind. Move back to the right to carry on in slow motion.</span></li>
       <li><b>Swipe</b><span>A quick swipe left jumps back 3 seconds.</span></li>
     </ul>
   </section>
 
-  <section class="band alt">
+  <section class="band alt" id="rights">
     <div class="in split">
-      <div class="sechead">
+      <div class="copy">
         <h2>Inside the app your fans already use</h2>
         <p class="lede">SloMo is an interactive layer. Rights holders and broadcasters add it to their own apps and video players, so the control sits on the footage they already show.</p>
+        <ul class="squares">
+          <li>Fans stay inside your app</li>
+          <li>Your colours, your player, your sponsors</li>
+          <li>Nothing new for fans to download</li>
+        </ul>
       </div>
-      <ul class="points">
-        <li>Fans stay inside your app</li>
-        <li>Your colours, your player, your sponsors</li>
-        <li>Nothing new for fans to download</li>
+      <ul class="uses">
+        <li><h3 class="h2">Highlights</h3><p>Every clip in the app becomes one fans can slow, freeze and run back themselves.</p></li>
+        <li><h3>Archive</h3><p>Classic footage gets a new reason to be watched again.</p></li>
+        <li><h3>Live</h3><p>Interactive replays alongside live coverage.</p></li>
       </ul>
-      <div class="cards">
-        <div class="card"><h3>Highlights</h3><p>Every clip in the app becomes one fans can slow, freeze and run back themselves.</p></div>
-        <div class="card"><h3>Archive</h3><p>Classic footage gets a new reason to be watched again.</p></div>
-        <div class="card"><h3>Live</h3><p>Interactive replays alongside live coverage.</p></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="in split mid angle-split">
+      <div class="angles" role="group" aria-label="Camera angle">
+        <button type="button" class="angle" aria-pressed="true"><img src="angles/main.jpg" alt="" width="720" height="1280" loading="lazy"><span class="tag">Main</span></button>
+        <button type="button" class="angle" aria-pressed="false"><img src="angles/behind.jpg" alt="" width="720" height="1280" loading="lazy"><span class="tag">Behind</span></button>
+        <button type="button" class="angle" aria-pressed="false"><img src="angles/side.jpg" alt="" width="720" height="1280" loading="lazy"><span class="tag">Side</span></button>
+      </div>
+      <div class="copy">
+        <h2>Change angle while the play runs</h2>
+        <p class="lede">Fans switch camera without stopping the clip, and can touch to slow on any angle.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" id="sponsors">
+    <div class="in split mid">
+      <div class="copy">
+        <h2>A sponsor on every replay</h2>
+        <p class="lede">While a fan touches the clip, the replay can carry a brand. Touch the clip to see it.</p>
+      </div>
+      <div class="sponsorside">
+        <div class="sponsorpill"><span class="by">Replay sponsored by</span><span class="h3">Your sponsor</span></div>
+        <label class="switch" for="sponsorOn"><input type="checkbox" id="sponsorOn" checked><span class="track" aria-hidden="true"></span>Show a sponsor while slowed</label>
       </div>
     </div>
   </section>
 
   <section class="band">
-    <div class="in split">
-      <div class="sechead">
-        <h2>A sponsor on every replay</h2>
-        <p class="lede">While a fan touches the clip, the replay can carry a brand. Touch the clip to see it.</p>
+    <div class="in adsplit">
+      <div class="copy">
+        <h2>The replay is the ad</h2>
+        <p class="lede">An athlete, a club or your own account posts a story with a link. One tap opens the replay full screen, in your colours and presented by your partner.</p>
+        <ul class="dots">
+          <li><img src="img/dot.svg" alt="" width="8" height="17"><span>Opens from a link in a story or post. Nothing to download.</span></li>
+          <li><img src="img/dot.svg" alt="" width="8" height="17"><span>Your partner's logo sits on the replay while fans touch it.</span></li>
+          <li><img src="img/dot.svg" alt="" width="8" height="17"><span>You see how many opened it and how long they stayed with the brand.</span></li>
+        </ul>
       </div>
-      <div class="panel">
-        <label class="check" for="sponsorOn"><input type="checkbox" id="sponsorOn" checked> Show a sponsor while slowed</label>
-        <div class="row"><button type="button" class="primary" data-toclip>Go to the clip</button></div>
+      <div class="storypair">
+        <figure class="step">
+          <div class="mock" role="img" aria-label="A story with a link sticker that says Open the SloMo replay, presented by an example partner, Northline.">
+            <div class="mockscreen">
+              <img class="photo" src="angles/main.jpg" alt="" width="720" height="1280" loading="lazy">
+              <div class="shade-top"></div><div class="shade-bot"></div>
+              <div class="progress"><i></i></div>
+              <div class="account"><img src="img/avatar.svg" alt="" width="24" height="24"><b>yourleague</b><span>2h</span></div>
+              <div class="pill presented"><span class="muted">Presented by</span><span class="northline"><img src="img/northline-mark.svg" alt="" width="16" height="16">Northline</span></div>
+              <p class="headline">See this one differently</p>
+              <div class="sticker"><img src="img/link-dot.svg" alt="" width="8" height="8">Open the SloMo replay</div>
+            </div>
+          </div>
+          <figcaption>1. The story</figcaption>
+        </figure>
+        <span class="arrow" aria-hidden="true">→</span>
+        <figure class="step">
+          <div class="mock" role="img" aria-label="The replay opened from the link, slowed to a quarter of normal speed, with the Northline logo on it and a button to open the league's app.">
+            <div class="mockscreen">
+              <img class="photo" src="angles/side.jpg" alt="" width="720" height="1280" loading="lazy">
+              <div class="shade-top"></div><div class="shade-bot"></div>
+              <div class="speed">0.25×</div>
+              <div class="pill replayby"><span class="muted">Replay by</span><span class="northline"><img src="img/northline-mark.svg" alt="" width="16" height="16">Northline</span></div>
+              <img class="tring" src="img/touch-ring.svg" alt="" width="64" height="64">
+              <img class="tpoint" src="img/touch-point.svg" alt="" width="11" height="11">
+              <div class="partnerbar"><span>Your League</span><span>Open the app</span></div>
+              <div class="replaybar"></div>
+            </div>
+          </div>
+          <figcaption>2. The replay</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
   <section class="band alt">
-    <div class="in">
-      <div class="sechead">
+    <div class="in stack">
+      <div class="steps-head">
         <h2>From your footage to your fans in five steps</h2>
         <p class="lede">Who does what, from the moment a clip leaves your production team.</p>
       </div>
       <ol class="steps">
-        <li>You send clips.</li>
-        <li>SloMo checks them.</li>
-        <li>SloMo prepares them.</li>
-        <li>Fans touch to slow.</li>
-        <li>You see results.</li>
+        <li><span class="n" aria-hidden="true">1</span><span>You send clips.</span></li>
+        <li><span class="n" aria-hidden="true">2</span><span>SloMo checks them.</span></li>
+        <li><span class="n" aria-hidden="true">3</span><span>SloMo prepares them.</span></li>
+        <li><span class="n" aria-hidden="true">4</span><span>Fans touch to slow.</span></li>
+        <li><span class="n" aria-hidden="true">5</span><span>You see results.</span></li>
       </ol>
-      <p class="closing">We integrate. We manage. You monetise.</p>
+      <p class="h3">We integrate. We manage. You monetise.</p>
     </div>
   </section>
 
   <section class="band">
     <div class="in split">
-      <div class="sechead">
-        <h2>Your footage at full frame rate, and our interactive layer in your app</h2>
+      <div class="copy">
+        <h2>Your footage at full frame rate, our interactive layer in your app</h2>
         <p class="lede">What we need from your production team.</p>
       </div>
-      <ul class="points">
-        <li>120 or 240 frames per second is best</li>
-        <li>Real time, not already slowed down</li>
-        <li>One file per camera</li>
-        <li>MP4 or MOV, 1080p or higher, with sound</li>
+      <ul class="spec">
+        <li><span class="k">Frame rate</span><span class="v">120 or 240 frames per second is best</span></li>
+        <li><span class="k">Speed</span><span class="v">Real time, not already slowed down</span></li>
+        <li><span class="k">Cameras</span><span class="v">One file per camera</span></li>
+        <li><span class="k">Format</span><span class="v">MP4 or MOV, 1080p or higher, with sound</span></li>
       </ul>
     </div>
   </section>
 
-  <section class="band alt">
+  <section class="band alt" id="try">
     <div class="in split">
-      <div class="sechead">
+      <div class="copy">
         <h2>Try it on your own footage</h2>
         <p class="lede">Load a clip from your phone or computer and control it the same way. It stays on your device and is not uploaded.</p>
-        <p class="note">Footage filmed at 120 or 240 frames per second looks smoothest when slowed.</p>
+        <p class="small">Footage filmed at 120 or 240 frames per second looks smoothest when slowed.</p>
       </div>
       <div class="panel">
         <div class="group">
-          <label class="filebtn primary" for="file">Load your own clip<input type="file" id="file" accept="video/*"></label>
-          <p class="clipname" id="clipname">Showing: golf swing at normal speed. It only slows while you touch it.</p>
+          <label class="btn primary filebtn" for="file">Load your own clip<input type="file" id="file" accept="video/*"></label>
+          <p class="small clipname" id="clipname">Showing: golf swing at normal speed. It only slows while you touch it.</p>
         </div>
         <div class="group">
-          <span class="label">Speed while touching</span>
+          <span class="small">Speed while touching</span>
           <div class="row" id="rates">
-            <button type="button" data-rate="0.5" aria-pressed="false">0.5×</button>
-            <button type="button" data-rate="0.25" aria-pressed="true">0.25×</button>
-            <button type="button" data-rate="0.125" aria-pressed="false">0.125×</button>
+            <button type="button" class="chip" data-rate="0.5" aria-pressed="false">0.5×</button>
+            <button type="button" class="chip" data-rate="0.25" aria-pressed="true">0.25×</button>
+            <button type="button" class="chip" data-rate="0.125" aria-pressed="false">0.125×</button>
           </div>
         </div>
         <div class="group">
-          <span class="label">Playback</span>
+          <span class="small">Playback</span>
           <div class="row">
-            <button type="button" id="playBtn">Pause</button>
-            <button type="button" id="soundBtn" aria-pressed="false">Sound</button>
-            <button type="button" id="fsBtn">Full screen</button>
+            <button type="button" class="chip" id="playBtn">Pause</button>
+            <button type="button" class="chip" id="soundBtn" aria-pressed="false">Sound</button>
+            <button type="button" class="chip" id="fsBtn">Full screen</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="band contact" id="contact">
+  <section class="contact" id="contact">
     <div class="in">
-      <h2>Want this in your app?</h2>
+      <h2 class="display">Want this in your app?</h2>
       <p class="lede">Tell us what you show and where. We will set up a pilot on your own footage.</p>
-      <div class="mail"><a class="addr" id="addr" href="mailto:george@slomo.tech">george@slomo.tech</a><button type="button" id="copyBtn">Copy email</button></div>
+      <div class="mail"><a class="addr" id="addr" href="mailto:george@slomo.tech">george@slomo.tech</a><button type="button" class="btn dark" id="copyBtn">Copy email</button></div>
     </div>
   </section>
 </main>
 
-<footer class="foot"><div class="in">© 2026 SloMo Technology Ltd · <a class="addr" href="privacy.html">App privacy</a> · <a class="addr" href="support.html">App support</a></div></footer>
+<footer class="foot"><div class="in"><span>© 2026 SloMo Technology Ltd</span><span class="flinks"><a href="privacy.html">App privacy</a><a href="support.html">App support</a></span></div></footer>
 
 <script src="tts-engine.js"></script>
 <script>
@@ -730,6 +960,16 @@ input[type="text"] {
   }
   copyBtn.addEventListener('click', function () {
     try { navigator.clipboard.writeText(addr.textContent).then(done, select); } catch (e) { select(); }
+  });
+})();
+</script>
+
+<script>
+// The angle tiles are stills for now: choosing one only marks it as the angle in use.
+(function () {
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.angle'));
+  tiles.forEach(function (t) {
+    t.addEventListener('click', function () { tiles.forEach(function (o) { o.setAttribute('aria-pressed', String(o === t)); }); });
   });
 })();
 </script>
