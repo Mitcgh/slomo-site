@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SloMo Zone</title>
-<meta name="description" content="Touch To Slow for sports video. Viewers hold the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
+<meta name="description" content="Touch To Slow for sports video. Viewers touch the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
 <meta name="theme-color" content="#070B12">
 <link rel="canonical" href="https://slomo.tech/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SloMo">
 <meta property="og:title" content="SloMo Zone">
-<meta property="og:description" content="Touch To Slow for sports video. Viewers hold the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
+<meta property="og:description" content="Touch To Slow for sports video. Viewers touch the screen to slow the action, right where they are looking. For broadcasters, leagues and rights holders.">
 <meta property="og:url" content="https://slomo.tech/">
 <meta property="og:image" content="https://slomo.tech/share.jpg">
 <meta property="og:image:width" content="1200">
@@ -232,7 +232,7 @@ input[type="text"] {
   <section class="in hero">
     <div class="hero-head">
       <h1>Touch the video to slow it down</h1>
-      <p class="lede">Press and hold the clip. Let go and it is back to full speed. That is Touch To Slow, and it works on any sports video.</p>
+      <p class="lede">Touch the clip and it slows. Let go and it is back to full speed. That is Touch To Slow, and it works on any sports video.</p>
     </div>
 
     <div class="stagecol">
@@ -240,7 +240,7 @@ input[type="text"] {
         <div class="screen">
           <div class="status" aria-hidden="true"><span>9:41</span><span class="island"></span><span class="sig"><i></i><i></i><i></i></span></div>
           <div class="appbar"><span class="t">Interactive replays</span><span class="by">by SloMo</span></div>
-          <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch and hold to slow it down, or hold the space bar.">
+          <div class="stage withsponsor" id="stage" tabindex="0" role="application" aria-label="Video of a golf swing. Touch it to slow it down, or hold the space bar.">
             <video id="v" poster="poster.jpg" playsinline muted loop autoplay preload="auto" disablepictureinpicture></video>
             <canvas id="cv"></canvas>
             <div class="sponsor" aria-hidden="true"><span class="by">Replay<br>sponsored by</span><img src="logo.svg" alt="" width="360" height="350"></div>
@@ -250,15 +250,15 @@ input[type="text"] {
             <div class="flash" id="flash">Back 3 seconds</div>
             <div class="fail" id="fail" hidden>This file could not be played here. Try an MP4 or MOV clip.</div>
           </div>
-          <div class="hintrow"><span>Hold to slow</span><span class="meter"><i id="meter"></i></span><span class="r" id="rate2">1.00×</span></div>
+          <div class="hintrow"><span>Touch to slow</span><span class="meter"><i id="meter"></i></span><span class="r" id="rate2">1.00×</span></div>
           <div class="homebar" aria-hidden="true"></div>
         </div>
       </div>
     </div>
 
     <ul class="how hero-how">
-      <li><b>Hold</b><span>Touch and hold anywhere on the video to slow it. Let go to return to full speed.</span></li>
-      <li><b>Drag</b><span>While holding, drag right to speed up, or left to slow, freeze and run it backwards.</span></li>
+      <li><b>Touch</b><span>Touch anywhere on the video to slow it. Let go to return to full speed.</span></li>
+      <li><b>Rewind</b><span>While touching, move a little to the left to rewind. Move back to the right to carry on in slow motion.</span></li>
       <li><b>Swipe</b><span>A quick swipe left jumps back 3 seconds.</span></li>
     </ul>
   </section>
@@ -267,7 +267,7 @@ input[type="text"] {
     <div class="in split">
       <div class="sechead">
         <h2>Inside the app your fans already use</h2>
-        <p class="lede">SloMo is an SDK. Rights holders and broadcasters add it to their own apps and video players, so the control sits on the footage they already show.</p>
+        <p class="lede">SloMo is an interactive layer. Rights holders and broadcasters add it to their own apps and video players, so the control sits on the footage they already show.</p>
       </div>
       <ul class="points">
         <li>Fans stay inside your app</li>
@@ -286,7 +286,7 @@ input[type="text"] {
     <div class="in split">
       <div class="sechead">
         <h2>A sponsor on every replay</h2>
-        <p class="lede">While a fan holds the clip, the replay can carry a brand. Hold the clip to see it.</p>
+        <p class="lede">While a fan touches the clip, the replay can carry a brand. Touch the clip to see it.</p>
       </div>
       <div class="panel">
         <label class="check" for="sponsorOn"><input type="checkbox" id="sponsorOn" checked> Show a sponsor while slowed</label>
@@ -305,7 +305,7 @@ input[type="text"] {
         <li>You send clips.</li>
         <li>SloMo checks them.</li>
         <li>SloMo prepares them.</li>
-        <li>Fans hold to slow.</li>
+        <li>Fans touch to slow.</li>
         <li>You see results.</li>
       </ol>
       <p class="closing">We integrate. We manage. You monetise.</p>
@@ -315,7 +315,7 @@ input[type="text"] {
   <section class="band">
     <div class="in split">
       <div class="sechead">
-        <h2>Your footage at full frame rate, and our SDK in your app</h2>
+        <h2>Your footage at full frame rate, and our interactive layer in your app</h2>
         <p class="lede">What we need from your production team.</p>
       </div>
       <ul class="points">
@@ -337,10 +337,10 @@ input[type="text"] {
       <div class="panel">
         <div class="group">
           <label class="filebtn primary" for="file">Load your own clip<input type="file" id="file" accept="video/*"></label>
-          <p class="clipname" id="clipname">Showing: golf swing at normal speed. It only slows while you hold.</p>
+          <p class="clipname" id="clipname">Showing: golf swing at normal speed. It only slows while you touch it.</p>
         </div>
         <div class="group">
-          <span class="label">Speed while holding</span>
+          <span class="label">Speed while touching</span>
           <div class="row" id="rates">
             <button type="button" data-rate="0.5" aria-pressed="false">0.5×</button>
             <button type="button" data-rate="0.25" aria-pressed="true">0.25×</button>
@@ -456,24 +456,26 @@ input[type="text"] {
   rateButtons.forEach(function (b) { b.addEventListener('click', function () { setHold(Number(b.dataset.rate)); }); });
   sponsorOn.addEventListener('change', setSponsor);
 
+  // Touch To Slow. Touching slows. Moving right does nothing. A small move to the left starts the rewind, which runs
+  // at one set speed however far the finger goes and carries on while it stays there. Moving back to the right a
+  // little catches the forward slow motion again. Up and down do nothing.
+  var REWIND = 0.5, TURN = 12;
   function targetFromDrag() {
-    var w = stage.clientWidth || 1;
-    var dx = s.dx;
-    var dead = 24;
-    if (performance.now() - s.t0 < 220) return s.hold;
-    dx = Math.abs(dx) < dead ? 0 : dx - Math.sign(dx) * dead;
-    // Logarithmic drag: the same distance always halves or doubles the speed (1x, 0.5x, 0.25x, 0.125x),
-    // so the control feels even along its whole length. Past the slowest forward speed comes freeze, then reverse.
-    var u = dx / w, octave = 0.2;
-    var uMin = octave * Math.log2(0.1 / s.hold);
-    if (u >= uMin) return Math.min(1, s.hold * Math.pow(2, u / octave));
-    var e = uMin - u;
-    return e < 0.06 ? 0 : -Math.min(1.5, (e - 0.06) * 4);
+    if (performance.now() - s.t0 < 220) { s.turn = s.dx; return s.hold; }
+    if (!s.rew) {
+      if (s.dx > s.turn) s.turn = s.dx;
+      if (s.turn - s.dx > TURN) { s.rew = true; s.turn = s.dx; }
+    } else {
+      if (s.dx < s.turn) s.turn = s.dx;
+      if (s.dx - s.turn > TURN) { s.rew = false; s.turn = s.dx; }
+    }
+    return s.rew ? -REWIND : s.hold;
   }
 
   function startHold(x, y) {
     s.holding = true; s.paused = false; playBtn.textContent = 'Pause';
     s.x0 = x; s.y0 = y; s.t0 = performance.now(); s.dx = 0; s.dy = 0;
+    s.rew = false; s.turn = 0;
     s.target = s.hold; s.force = true;
     use.holds++;
     stage.classList.add('holding');
